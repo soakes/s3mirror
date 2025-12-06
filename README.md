@@ -2,8 +2,9 @@
 
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Lint Status](https://github.com/soakes/s3-mirror/actions/workflows/lint.yml/badge.svg)](https://github.com/soakes/s3-mirror/actions/workflows/lint.yml)
-[![GitHub Issues](https://img.shields.io/github/issues/soakes/s3-mirror)](https://github.com/soakes/s3-mirror/issues)
+[![Lint Status](https://github.com/soakes/s3mirror/actions/workflows/lint.yml/badge.svg)](https://github.com/soakes/s3mirror/actions/workflows/lint.yml)
+[![Format Status](https://github.com/soakes/s3mirror/actions/workflows/format.yml/badge.svg)](https://github.com/soakes/s3mirror/actions/workflows/format.yml)
+[![GitHub Issues](https://img.shields.io/github/issues/soakes/s3mirror)](https://github.com/soakes/s3mirror/issues)
 
 **S3 Mirror** is a production-ready Python utility for synchronizing buckets and objects between S3-compatible endpoints. Built on `boto3`, it provides enterprise-grade reliability with comprehensive logging, parallelized transfers, and automation-friendly operation.
 
@@ -47,13 +48,14 @@ This tool is designed for infrastructure engineers and DevOps teams requiring de
 ✅ **Flexible Configuration** – YAML/JSON config files with CLI flag overrides  
 ✅ **Production Logging** – Multiple logging modes including cron-friendly file output with silent console operation  
 ✅ **Automation Ready** – Idempotent design for reliable scheduled execution  
-✅ **CI/CD Validated** – Automated linting across Python 3.10–3.13  
+✅ **CI/CD Validated** – Automated linting and formatting across Python 3.10–3.13  
+✅ **Dependency Management** – Automated security updates via Dependabot  
 
 ---
 
 ## Prerequisites
 
-- **Python 3.10 or higher**
+- **Python 3.10 or higher** (tested through 3.13)
 - **S3 Credentials**: AWS access keys or IAM credentials for both source and destination endpoints
 - **Network Access**: Connectivity to both S3 endpoints (including proxy/firewall configuration if required)
 
@@ -64,8 +66,8 @@ This tool is designed for infrastructure engineers and DevOps teams requiring de
 Clone the repository and set up the Python environment:
 
 ```bash
-git clone https://github.com/soakes/s3-mirror.git
-cd s3-mirror
+git clone https://github.com/soakes/s3mirror.git
+cd s3mirror
 
 # Create and activate virtual environment
 python -m venv .venv
@@ -134,23 +136,23 @@ sync:
 Execute a synchronization using your configuration file:
 
 ```bash
-./s3_mirror.py --config config.yaml
+./s3mirror.py --config config.yaml
 ```
 
 ### Command-Line Options
 
 ```bash
 # Silent mode (console shows errors only)
-./s3_mirror.py --config config.yaml --quiet
+./s3mirror.py --config config.yaml --quiet
 
 # Log to file with silent console (ideal for cron jobs)
-./s3_mirror.py --config config.yaml --log-file /var/log/s3_mirror.log
+./s3mirror.py --config config.yaml --log-file /var/log/s3mirror.log
 
 # Debug mode with verbose output
-./s3_mirror.py --config config.yaml --debug
+./s3mirror.py --config config.yaml --debug
 
 # Disable deletion of extraneous objects
-./s3_mirror.py --config config.yaml --no-delete
+./s3mirror.py --config config.yaml --no-delete
 ```
 
 ### Cron Automation Example
@@ -159,7 +161,7 @@ Add to your crontab for scheduled synchronization:
 
 ```bash
 # Run daily at 2:00 AM with file logging
-0 2 * * * /path/to/s3-mirror/.venv/bin/python /path/to/s3-mirror/s3_mirror.py --config /path/to/config.yaml --log-file /var/log/s3_mirror.log --quiet
+0 2 * * * /path/to/s3mirror/.venv/bin/python /path/to/s3mirror/s3mirror.py --config /path/to/config.yaml --log-file /var/log/s3mirror.log --quiet
 ```
 
 ---
@@ -192,7 +194,7 @@ S3 Mirror provides multiple logging modes tailored to different operational cont
 
 To disable deletion while still copying new/changed objects:
 ```bash
-./s3_mirror.py --config config.yaml --no-delete
+./s3mirror.py --config config.yaml --no-delete
 ```
 
 Or set `delete_extraneous: false` in the configuration file.
@@ -201,31 +203,48 @@ Or set `delete_extraneous: false` in the configuration file.
 
 ## Continuous Integration
 
-[![Lint Status](https://github.com/soakes/s3-mirror/actions/workflows/lint.yml/badge.svg)](https://github.com/soakes/s3-mirror/actions/workflows/lint.yml)
+[![Lint Status](https://github.com/soakes/s3mirror/actions/workflows/lint.yml/badge.svg)](https://github.com/soakes/s3mirror/actions/workflows/lint.yml)
+[![Format Status](https://github.com/soakes/s3mirror/actions/workflows/format.yml/badge.svg)](https://github.com/soakes/s3mirror/actions/workflows/format.yml)
 
 Every commit and pull request is automatically validated through GitHub Actions across **Python 3.10 through 3.13**:
 
+### Code Quality Workflows
+
+**Linting** (`lint.yml`):
 - **Pylint**: Static code analysis for code quality and standards compliance
+- **Cross-version testing**: Validates compatibility across all supported Python versions
+
+**Formatting** (`format.yml`):
 - **Black**: Code formatting verification (PEP 8 conformance)
 - **isort**: Import statement organization
-- **Smoke Tests**: Basic execution validation
+- **Consistent style enforcement** across the entire codebase
 
-The CI pipeline ensures code quality and cross-version compatibility, providing confidence for production deployment.
+### Dependency Management
+
+**Dependabot** (`dependabot.yml`):
+- **Automated dependency updates** for security patches and version bumps
+- **Weekly scanning** of Python packages and GitHub Actions
+- **Auto-merge workflow** (`dependabot-auto-merge.yml`) for patch and minor updates
+
+The CI pipeline ensures code quality, security, and cross-version compatibility, providing confidence for production deployment.
 
 ---
 
 ## Project Structure
 
 ```
-s3-mirror/
-├── s3_mirror.py              # Main synchronization script
-├── requirements.txt          # Python dependencies (boto3, PyYAML, etc.)
-├── .pylintrc                 # Pylint configuration and standards
-├── README.md                 # This documentation
-├── LICENSE                   # MIT License
-└── .github/
-    └── workflows/
-        └── lint.yml          # GitHub Actions CI pipeline
+s3mirror/
+├── .github/
+│   ├── dependabot.yml                    # Dependabot configuration
+│   └── workflows/
+│       ├── dependabot-auto-merge.yml     # Auto-merge for dependency updates
+│       ├── format.yml                    # Code formatting checks (Black, isort)
+│       └── lint.yml                      # Linting workflow (Pylint)
+├── .pylintrc                             # Pylint configuration and standards
+├── LICENSE                               # MIT License
+├── README.md                             # This documentation
+├── requirements.txt                      # Python dependencies (boto3, PyYAML, etc.)
+└── s3mirror.py                           # Main synchronization script
 ```
 
 ---
@@ -239,6 +258,21 @@ Contributions are welcome and appreciated. To contribute:
 3. **Implement your changes** with appropriate tests
 4. **Ensure CI passes** (run `pylint`, `black`, and `isort` locally)
 5. **Submit a pull request** with a clear description of changes
+
+### Local Development
+
+Run code quality checks before committing:
+
+```bash
+# Format code
+black s3mirror.py
+
+# Sort imports
+isort s3mirror.py
+
+# Run linter
+pylint s3mirror.py
+```
 
 **Areas for contribution**:
 - Bug fixes and reliability improvements
@@ -260,3 +294,5 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 **Developed by Simon Oakes**  
 *Infrastructure Engineer | Open Source Contributor*  
 © 2025
+
+---

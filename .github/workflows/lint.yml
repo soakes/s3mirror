@@ -39,17 +39,17 @@ jobs:
     - name: Run pylint
       run: |
         echo "🔍 Running pylint..."
-        pylint s3_mirror.py
+        pylint s3mirror.py
 
     - name: Check formatting (black)
       run: |
         echo "📝 Checking black formatting..."
-        black --check s3_mirror.py
+        black --check s3mirror.py
 
     - name: Check imports (isort)
       run: |
         echo "📦 Checking import ordering..."
-        isort --check-only s3_mirror.py
+        isort --check-only s3mirror.py
 
   success:
     name: ✅ Lint Passed

@@ -629,7 +629,7 @@ class S3Mirror:  # pylint: disable=too-many-instance-attributes
 
 def setup_logging(args: argparse.Namespace) -> logging.Logger:
     """Configure logging with appropriate handlers and formatters."""
-    logger = logging.getLogger("s3_mirror")
+    logger = logging.getLogger("s3mirror")
     logger.setLevel(logging.DEBUG)
 
     logger.handlers.clear()
@@ -724,13 +724,13 @@ Examples:
   %(prog)s --quiet
 
   # Log to file (console is quiet, all output to file)
-  %(prog)s --log-file /var/log/s3_mirror.log
+  %(prog)s --log-file /var/log/s3mirror.log
 
   # Log to file with debug console output too
-  %(prog)s --debug --log-file /var/log/s3_mirror.log
+  %(prog)s --debug --log-file /var/log/s3mirror.log
 
   # Use custom config file
-  %(prog)s --config /etc/s3_mirror.yaml --log-file /var/log/s3_mirror.log
+  %(prog)s --config /etc/s3mirror.yaml --log-file /var/log/s3mirror.log
         """,
     )
 
