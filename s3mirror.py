@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-S3 Bucket Mirror Script - Production Edition
+S3 Bucket Mirror Script
 Professional-grade bucket mirroring for S3-compatible storage systems.
 
 Features:
